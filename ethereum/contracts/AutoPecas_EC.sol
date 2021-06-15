@@ -23,12 +23,12 @@ contract DeployContracts {
 }
 
 contract CARS_BC {
-    
+
     address public admin;
     address public IMT_address = 0x5B38Da6a701c568545dCfcB03FcB875f56beddC4;
     address[] public users_list;
     mapping(address => bool) public users;
-    
+
     modifier restricted_admin() {
         require(msg.sender == admin);
         _;
@@ -43,7 +43,7 @@ contract CARS_BC {
         request.approvals[msg.sender] = true;
         request.approvalCount++;
     }
-    
+
     function Lista_users(address user) public{
         require(users[msg.sender]);
         users_list.push(msg.sender);
@@ -58,24 +58,24 @@ contract CARS_BC {
         string n_serie;
         string ano;
         uint32 kilometragem;
-        int32 valor;
+        uint32 valor;
         bool acidentado;
         address owner_address;
     }
-    
+
 
     // Array com a lista de todos os carros na bloco
     Car_Properties[] public car_list;
-    
+
     struct Parts_Properties {
         mapping(address => bool) approvals;
 
     }
-    
+
     /*
     address[] public users_list;
     mapping(address => bool) public users;
-    
+
     modifier restricted_admin() {
         require(msg.sender == admin);
         _;
@@ -88,16 +88,16 @@ contract CARS_BC {
     }
     */
 
-    function Adicionar_Carro(        
+    function Adicionar_Carro(
     string add_marca,
     string add_modelo,
     string add_motor,
     string add_n_serie,
     string add_ano,
     uint32 add_kilometragem,
-    int32 add_valor,
+    uint32 add_valor,
     bool add_acidentado) public {
-        
+
         Car_Properties memory new_Car_Properties = Car_Properties({
         marca: add_marca,
         modelo: add_modelo,
@@ -109,27 +109,72 @@ contract CARS_BC {
         acidentado: add_acidentado,
         owner_address: msg.sender
         });
-    
+
     // adicionar novo carro na lista
     car_list.push(new_Car_Properties);
     //users[msg.sender] = true;
-    n_carros++;
     }
-    
+
     /*
     function Lista_users() public{
         require(users[msg.sender]);
         users_list.push(msg.sender);
-        
+
     }
     */
-    
+
     function Validadar_Carro_IMT() public{
-        
+
     }
-    
+
     function Comprar_Carro() payable public{
         /*require(msg.value = new_car.preco);
         comprador.push(msg.sender);*/
+    }
+}
+
+contract PARTS_BC {
+
+    address public Marca_address = 0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2;
+
+    // Contituição do bloco com informação de carro intruduzido
+    struct Parts_Properties {
+        string marca;
+        string n_serie;
+        string ano;
+        bool original;
+        string estado;
+        address car_adress;
+        address owner_address;
+    }
+
+    // Array com a lista de todos os carros na bloco
+    Parts_Properties[] public parts_list;
+
+    function Adicionar_Peca(
+    string add_marca,
+    string add_n_serie,
+    string add_ano,
+    bool add_original,
+    string add_estado,
+    address add_car_adress) public {
+
+        Parts_Properties memory new_Parts_Properties = Parts_Properties({
+            marca: add_marca,
+            n_serie: add_n_serie,
+            ano: add_ano,
+            original: add_original,
+            estado: add_estado,
+            car_adress: add_car_adress,
+            owner_address: msg.sender
+        });
+
+    // adicionar novo carro na lista
+        parts_list.push(new_Parts_Properties);
+
+    }
+
+        function Validadar_Carro_IMT() public{
+
     }
 }
