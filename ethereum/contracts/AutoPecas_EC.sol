@@ -1,13 +1,20 @@
 pragma solidity ^0.4.17;
 
 contract DeployContracts {
+
+    uint128 n_carros;
+    uint128 n_utilizadores;
+    uint128 n_pecas;
+
     //address[] public deployed_USERS_BC;
     address[] public deployed_CARS_BC;
     //address[] public deployed_PARTS_BC;
+    address[] public deployed_CARS_BC;
 
     function create_New_Car(address) public {
         address new_CAR = new CARS_BC();
         deployed_CARS_BC.push(new_CAR);
+        n_carros++;
     }
 
     function getdeployed_CARS_BC() public view returns (address[]) {
@@ -16,10 +23,6 @@ contract DeployContracts {
 }
 
 contract CARS_BC {
-    
-    uint64 n_carros;
-    uint64 n_utilizadores;
-    uint64 n_pecas;
     
     address public admin;
     address public IMT_address = 0x5B38Da6a701c568545dCfcB03FcB875f56beddC4;
