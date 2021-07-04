@@ -2,9 +2,9 @@ pragma solidity ^0.4.17;
 
 contract DeployContracts {
 
-    uint128 n_utilizadores;
-    uint128 n_carros;
-    uint128 n_pecas;
+    uint128 n_users;
+    uint128 n_cars;
+    uint128 n_parts;
 
     //address[] public deployed_USERS_BC;
     address[] public deployed_CARS_BC;
@@ -14,22 +14,42 @@ contract DeployContracts {
     function create_New_Car(address) public {
         address new_CAR = new CARS_BC();
         deployed_CARS_BC.push(new_CAR);
-        n_carros++;
+        n_cars++;
     }
 
     function getdeployed_CARS_BC() public view returns (address[]) {
         return deployed_CARS_BC;
     }
 
-    address public admin;
+    function create_New_Part(address) public {
+        address new_Part = new PARTS_BC();
+        deployed_PARTS_BC.push(new_Part);
+        n_parts++;
+    }
+
+    function getdeployed_PART_BC() public view returns (address[]) {
+        return deployed_PARTS_BC;
+    }
+
+    address public Owern;
     address[] public users_list;
     mapping(address => bool) public users;
 
-    modifier restricted_admin() {
-        require(msg.sender == admin);
+    modifier restricted_Owern() {
+        require(msg.sender == Owern);
         _;
     }
 
+    /*
+    function Comprar_Peca(address peca, uint preco) public payable {
+
+        require(msg.value == );
+
+        address buyer = msg.sender;
+        // comprador;
+        //preco = price;
+    }
+    */
 /*
     address[] public users_list;
     mapping(address => bool) public users;
@@ -90,46 +110,46 @@ contract CARS_BC {
 
     // Contituição do bloco com informação de carro intruduzido
     struct Car_Properties {
-        string marca;
-        string modelo;
-        string motor;
-        string matricula;
-        string ano;
-        uint32 kilometragem;
-        uint32 valor;
-        bool acidentado;
+        string brand;
+        string model;
+        string engine;
+        string plate;
+        string year;
+        uint32 kilometrage;
+        uint32 value;
+        bool accident;
         address owner_address;
     }
 
 
     // Array com a lista de todos os carros na bloco
     Car_Properties[] public car_list;
-    Car_Properties[] public Carros_Validados;
+    Car_Properties[] public Validated_Cars;
 
     struct Parts_Properties {
         mapping(address => bool) approvals;
 
     }
 
-    function Adicionar_Carro(
-    string add_marca,
-    string add_modelo,
-    string add_motor,
-    string add_matricula,
-    string add_ano,
-    uint32 add_kilometragem,
-    uint32 add_valor,
-    bool add_acidentado) public {
+    function Add_Car(
+    string add_brand,
+    string add_model,
+    string add_engine,
+    string add_plate,
+    string add_year,
+    uint32 add_kilometrage,
+    uint32 add_value,
+    bool add_accident) public {
 
         Car_Properties memory new_Car_Properties = Car_Properties({
-        marca: add_marca,
-        modelo: add_modelo,
-        motor: add_motor,
-        matricula: add_matricula,
-        ano: add_ano,
-        kilometragem: add_kilometragem,
-        valor: add_valor,
-        acidentado: add_acidentado,
+        brand: add_brand,
+        model: add_model,
+        engine: add_engine,
+        plate: add_plate,
+        year: add_year,
+        kilometrage: add_kilometrage,
+        value: add_value,
+        accident: add_accident,
         owner_address: Owern_address
         });
 
@@ -137,9 +157,9 @@ contract CARS_BC {
     car_list.push(new_Car_Properties);
     }
 
-    function Validadar_Carro_IMT(uint64 ind, bool validadar_IMT) public restricted_IMT_address {
-        if (validadar_IMT == true) {
-            Carros_Validados.push(car_list[ind]);
+    function Validated_Cars_IMT(uint64 ind, bool validated_IMT) public restricted_IMT_address {
+        if (validated_IMT == true) {
+            Validated_Cars.push(car_list[ind]);
         }
     }
 }
@@ -162,36 +182,36 @@ contract PARTS_BC {
 
     // Contituição do bloco com informação de carro intruduzido
     struct Parts_Properties {
-        string marca;
-        string n_serie;
-        string ano;
+        string brand;
+        string VIN;
+        string year;
         bool original;
-        string estado;
-        uint64 preco;
+        string status;
+        uint64 price;
         address car_adress;
         address owner_address;
     }
 
     // Array com a lista de todos os carros na bloco
     Parts_Properties[] public parts_list;
-    Parts_Properties[] public Pecas_Validados;
+    Parts_Properties[] public Validated_Parts;
 
-    function Adicionar_Peca(
-    string add_marca,
-    string add_n_serie,
-    string add_ano,
+    function Add_Parts(
+    string add_brand,
+    string add_VIN,
+    string add_year,
     bool add_original,
-    string add_estado,
-    uint64 add_preco,
+    string add_status,
+    uint64 add_price,
     address add_car_adress) public {
 
         Parts_Properties memory new_Parts_Properties = Parts_Properties({
-            marca: add_marca,
-            n_serie: add_n_serie,
-            ano: add_ano,
+            brand: add_brand,
+            VIN: add_VIN,
+            year: add_year,
             original: add_original,
-            estado: add_estado,
-            preco: add_preco/etherium,
+            status: add_status,
+            price: add_price/etherium,
             car_adress: add_car_adress,
             owner_address: Owern_address
         });
@@ -200,11 +220,14 @@ contract PARTS_BC {
     parts_list.push(new_Parts_Properties);
     }
 
-    function Validadar_Peca_Marca(uint64 ind, bool validadar_Marca) public restricted_MARCA_address{
-        if (validadar_Marca == true) {
-            Pecas_Validados.push(parts_list[ind]);
+    function Validated_Parts_Marca(uint64 ind, bool validated_Marca) public restricted_MARCA_address{
+        if (validated_Marca == true) {
+            Validated_Parts.push(parts_list[ind]);
         }
     }
+
+
+
 }
 
 contract BUY_BC {
@@ -215,8 +238,10 @@ contract BUY_BC {
     //}
 
 
+    /*
+     function Comprar_Peca(address peca, uint preco) public payable {
 
-     function Comprar_Peca(address peca, uint preco) public {
+        require(msg.value == );
 
         address buyer = msg.sender;
         // comprador;
